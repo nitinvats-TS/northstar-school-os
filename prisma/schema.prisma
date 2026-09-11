@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  DIRECTOR
+  FRONT_OFFICE
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Student {
+  id          String   @id @default(cuid())
+  admissionNo String   @unique
+  firstName   String
+  lastName    String
+  className   String
+  section     String
+  phone       String?
+  email       String?
+  createdAt   DateTime @default(now())
+  attendance  AttendanceRecord[] @relation("StudentAttendance")
+}
+
+model Teacher {
+  id          String   @id @default(cuid())
+  employeeId  String   @unique
+  firstName   String
+  lastName    String
+  subject     String
+  phone       String?
+  email       String?
+  createdAt   DateTime @default(now())
+  attendance  AttendanceRecord[] @relation("TeacherAttendance")
+}
+
+model Parent {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  phone     String
+  email     String?  @unique
+  createdAt DateTime @default(now())
+}
+
+model AttendanceRecord {
+  id        String           @id @default(cuid())
+  date      DateTime         @db.Date
+  status    AttendanceStatus
+  note      String?
+  markedBy  String?
+  studentId String?
+  teacherId String?
+  student   Student?         @relation("StudentAttendance", fields: [studentId], references: [id], onDelete: Cascade)
+  teacher   Teacher?         @relation("TeacherAttendance", fields: [teacherId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([date])
+  @@index([studentId, date])
+  @@index([teacherId, date])
+  @@unique([date, studentId])
+  @@unique([date, teacherId])
+}
