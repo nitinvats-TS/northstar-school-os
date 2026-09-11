@@ -46,38 +46,14 @@ export async function getStudent(id: string) {
 }
 
 export async function createStudent(input: StudentInput) {
-  try {
-    return serializeStudent(await prisma.student.create({ data: input }));
-  } catch (error) {
-    console.warn("PostgreSQL unavailable for student create; using in-memory storage.", isDatabaseError(error) ? error.message : error);
-    const student: Student = { ...input, id: `student_${crypto.randomUUID()}`, createdAt: new Date().toISOString() };
-    fallbackStore.students.push(student);
-    return student;
-  }
+  return serializeStudent(await prisma.student.create({ data: input }));
 }
 
 export async function updateStudent(id: string, input: StudentInput) {
-  try {
-    return serializeStudent(await prisma.student.update({ where: { id }, data: input }));
-  } catch (error) {
-    console.warn("PostgreSQL unavailable for student update; using in-memory storage.", isDatabaseError(error) ? error.message : error);
-    const index = fallbackStore.students.findIndex((student) => student.id === id);
-    if (index === -1) return null;
-    const student = { ...fallbackStore.students[index], ...input };
-    fallbackStore.students[index] = student;
-    return student;
-  }
+  return serializeStudent(await prisma.student.update({ where: { id }, data: input }));
 }
 
 export async function deleteStudent(id: string) {
-  try {
-    await prisma.student.delete({ where: { id } });
-    return true;
-  } catch (error) {
-    console.warn("PostgreSQL unavailable for student delete; using in-memory storage.", isDatabaseError(error) ? error.message : error);
-    const index = fallbackStore.students.findIndex((student) => student.id === id);
-    if (index === -1) return false;
-    fallbackStore.students.splice(index, 1);
-    return true;
-  }
+  await prisma.student.delete({ where: { id } });
+  return true;
 }

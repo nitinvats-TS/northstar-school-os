@@ -24,5 +24,10 @@ export async function POST(request: Request) {
   if (validation.errors) return NextResponse.json({ message: "Please correct the highlighted fields.", fieldErrors: validation.errors }, { status: 400 });
   const duplicate = (await listStudents()).some((student) => student.admissionNo === validation.data?.admissionNo);
   if (duplicate) return NextResponse.json({ message: "That admission number is already in use.", fieldErrors: { admissionNo: "Admission number must be unique." } }, { status: 409 });
-  return NextResponse.json({ student: await createStudent(validation.data!) }, { status: 201 });
+  try {
+    return NextResponse.json({ student: await createStudent(validation.data!) }, { status: 201 });
+  } catch (error) {
+    console.error("Student create Prisma error:", error);
+    return NextResponse.json({ message: "Student could not be created in PostgreSQL.", error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
 }

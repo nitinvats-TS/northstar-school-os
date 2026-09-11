@@ -29,12 +29,22 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (validation.errors) return NextResponse.json({ message: "Please correct the highlighted fields.", fieldErrors: validation.errors }, { status: 400 });
   const duplicate = (await listStudents()).some((student) => student.id !== id && student.admissionNo === validation.data?.admissionNo);
   if (duplicate) return NextResponse.json({ message: "That admission number is already in use.", fieldErrors: { admissionNo: "Admission number must be unique." } }, { status: 409 });
-  return NextResponse.json({ student: await updateStudent(id, validation.data!) });
+  try {
+    return NextResponse.json({ student: await updateStudent(id, validation.data!) });
+  } catch (error) {
+    console.error("Student update Prisma error:", error);
+    return NextResponse.json({ message: "Student could not be updated in PostgreSQL.", error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
 }
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUser();
   if (!user || !canDeleteStudent(user.role)) return NextResponse.json({ message: "You do not have permission to delete students." }, { status: 403 });
-  const deleted = await deleteStudent((await params).id);
-  return deleted ? NextResponse.json({ success: true }) : NextResponse.json({ message: "Student not found." }, { status: 404 });
+  try {
+    const deleted = await deleteStudent((await params).id);
+    return deleted ? NextResponse.json({ success: true }) : NextResponse.json({ message: "Student not found." }, { status: 404 });
+  } catch (error) {
+    console.error("Student delete Prisma error:", error);
+    return NextResponse.json({ message: "Student could not be deleted from PostgreSQL.", error: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
 }
