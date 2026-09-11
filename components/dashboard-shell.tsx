@@ -12,6 +12,9 @@ import {
   Settings,
   Users,
   WalletCards,
+  CalendarDays,
+  Megaphone,
+  FileBarChart,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -29,6 +32,12 @@ const navigation = [
   { label: "Fees & billing", href: "/dashboard/fees", icon: WalletCards },
   { label: "Exams", href: "/dashboard/exams", icon: BookOpen },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
+  { label: "Timetable", href: "/dashboard/timetable", icon: CalendarDays },
+  { label: "Announcements", href: "/dashboard/announcements", icon: Megaphone },
+  { label: "Reports", href: "/dashboard/reports", icon: FileBarChart },
+  { label: "Parent portal", href: "/dashboard/portal/parent", icon: Users },
+  { label: "Student portal", href: "/dashboard/portal/student", icon: GraduationCap },
+  { label: "Teacher portal", href: "/dashboard/portal/teacher", icon: Users },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {

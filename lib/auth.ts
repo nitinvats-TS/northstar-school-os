@@ -42,9 +42,9 @@ const roleRoutes: Record<Role, string[]> = {
   SUPER_ADMIN: ["/dashboard"],
   DIRECTOR: ["/dashboard"],
   FRONT_OFFICE: ["/dashboard", "/dashboard/students", "/dashboard/parents", "/dashboard/attendance", "/dashboard/fees"],
-  TEACHER: ["/dashboard", "/dashboard/students", "/dashboard/attendance", "/dashboard/exams"],
-  STUDENT: ["/dashboard", "/dashboard/students", "/dashboard/attendance", "/dashboard/exams"],
-  PARENT: ["/dashboard", "/dashboard/students", "/dashboard/attendance", "/dashboard/fees"],
+  TEACHER: ["/dashboard", "/dashboard/students", "/dashboard/attendance", "/dashboard/exams", "/dashboard/timetable", "/dashboard/portal/teacher"],
+  STUDENT: ["/dashboard", "/dashboard/students", "/dashboard/attendance", "/dashboard/exams", "/dashboard/timetable", "/dashboard/portal/student"],
+  PARENT: ["/dashboard", "/dashboard/students", "/dashboard/attendance", "/dashboard/fees", "/dashboard/portal/parent"],
 };
 
 export function isRole(value: string | undefined): value is Role {

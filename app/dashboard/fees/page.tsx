@@ -1,8 +1,5 @@
-import { ArrowDownToLine, IndianRupee, ReceiptText, WalletCards } from "lucide-react";
-import { DataTable } from "@/components/data-table";
-import { PageHeader } from "@/components/page-header";
-import { StatCard } from "@/components/stat-card";
+import { OperationsDashboard } from "@/components/operations-dashboard";
 
-const payments = [{ id: "INV-2841", student: "Riya Kapoor", type: "Term 2 tuition", amount: "Rs 24,500", date: "11 Mar 2025", status: "Paid" }, { id: "INV-2839", student: "Aarav Mehta", type: "Transport fee", amount: "Rs 8,400", date: "10 Mar 2025", status: "Paid" }, { id: "INV-2824", student: "Kabir Shah", type: "Term 2 tuition", amount: "Rs 24,500", date: "08 Mar 2025", status: "Pending" }];
-
-export default function FeesPage() { return <div><PageHeader eyebrow="Finance" title="Fees & billing" description="Track collections, outstanding invoices and payment activity." action="Create invoice" /><div className="mb-6 grid gap-4 sm:grid-cols-3"><StatCard label="Collected this month" value="Rs 8.4L" detail="68% of monthly target" icon={IndianRupee} /><StatCard label="Outstanding" value="Rs 3.9L" detail="Across 184 invoices" icon={WalletCards} tone="orange" /><StatCard label="Collection rate" value="81.4%" detail="Up 4.2% from last month" icon={ReceiptText} tone="blue" /></div><div className="mb-5 flex justify-end"><button className="inline-flex items-center gap-2 rounded-xl border border-[#dce4e6] bg-white px-4 py-2.5 text-sm font-semibold text-slate-600"><ArrowDownToLine size={16} />Export report</button></div><DataTable searchPlaceholder="Search invoice or student" columns={[{ key: "invoice", label: "Invoice" }, { key: "student", label: "Student" }, { key: "type", label: "Description" }, { key: "amount", label: "Amount" }, { key: "date", label: "Date" }, { key: "status", label: "Status" }]} rows={payments.map((payment) => ({ ...payment, _search: `${payment.id} ${payment.student} ${payment.type}`, invoice: <span className="font-semibold text-[#1b2e38]">{payment.id}</span>, amount: <span className="font-semibold text-[#1b2e38]">{payment.amount}</span>, status: <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${payment.status === "Paid" ? "bg-[#e4f1eb] text-[#26705b]" : "bg-[#fff0df] text-[#bc6b38]"}`}>{payment.status}</span> }))} /></div>; }
+export default function FeesPage() {
+  return <OperationsDashboard module="fees" />;
+}
