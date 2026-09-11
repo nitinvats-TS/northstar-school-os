@@ -86,8 +86,8 @@ export function getDefaultRoute(role: Role) {
     DIRECTOR: "/dashboard",
     FRONT_OFFICE: "/dashboard",
     TEACHER: "/dashboard",
-    STUDENT: "/dashboard",
-    PARENT: "/dashboard",
+    STUDENT: "/dashboard/portal/student",
+    PARENT: "/dashboard/portal/parent",
   };
   return defaultRoutes[role];
 }

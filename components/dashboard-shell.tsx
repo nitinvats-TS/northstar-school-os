@@ -43,8 +43,8 @@ const navigation = [
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { user, logout } = useAuth();
-  const visibleNavigation = navigation.filter((item) => user && canAccess(user.role, item.href));
+  const { user, loading, logout } = useAuth();
+  const visibleNavigation = loading && pathname === "/dashboard" ? navigation : navigation.filter((item) => user && canAccess(user.role, item.href));
 
   return (
     <div className="min-h-screen bg-[#f5f7f9] text-[#18232f]">

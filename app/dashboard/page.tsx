@@ -1,9 +1,19 @@
+"use client";
+
 import { ArrowUpRight, CalendarDays, CheckCircle2, Clock3, GraduationCap, IndianRupee, Users } from "lucide-react";
 import Link from "next/link";
+import { OperationsDashboard } from "@/components/operations-dashboard";
+import { useAuth } from "@/components/auth-provider";
 import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 
 export default function Dashboard() {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div className="rounded-2xl border border-[#e3e9eb] bg-white p-10 text-center text-sm text-slate-500">Loading your dashboard...</div>;
+  if (user?.role === "PARENT") return <OperationsDashboard module="parent-portal" />;
+  if (user?.role === "STUDENT") return <OperationsDashboard module="student-portal" />;
+
   return <div><PageHeader eyebrow="Tuesday, 11 March 2025" title="Good morning, Ananya" description="Here is what is happening across Northstar Academy today." action="Add student" href="/dashboard/students" />
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><StatCard label="Total students" value="1,248" detail="↑ 8.4% from last term" icon={GraduationCap} /><StatCard label="Teaching staff" value="82" detail="4 staff on leave today" icon={Users} tone="blue" /><StatCard label="Today's attendance" value="96.2%" detail="↑ 1.8% compared to Monday" icon={CheckCircle2} tone="orange" /><StatCard label="Fees collected" value="Rs 8.4L" detail="68% of monthly target" icon={IndianRupee} tone="rose" /></div>
     <div className="mt-6 grid gap-6 xl:grid-cols-[1.35fr_0.65fr]"><section className="rounded-2xl border border-[#e3e9eb] bg-white p-5 shadow-[0_5px_20px_rgba(24,35,47,0.03)]"><div className="mb-6 flex items-center justify-between"><div><h2 className="font-semibold">Attendance overview</h2><p className="mt-1 text-xs text-slate-500">Average attendance across all grades</p></div><button className="text-xs font-semibold text-[#1c5b4d]">This week <ArrowUpRight size={14} className="inline" /></button></div><div className="flex h-48 items-end gap-3 sm:gap-6">{[["Mon",82],["Tue",91],["Wed",88],["Thu",94],["Fri",96],["Sat",72]].map(([day, height]) => <div key={day} className="flex flex-1 flex-col items-center gap-2"><span className="text-[11px] font-semibold text-slate-500">{height}%</span><div className="flex h-36 w-full items-end rounded-lg bg-[#f1f6f4]"><div className="w-full rounded-lg bg-[#6fae9b]" style={{ height: `${Number(height) * 0.95}%` }} /></div><span className="text-[11px] text-slate-500">{day}</span></div>)}</div></section><section className="rounded-2xl border border-[#e3e9eb] bg-[#102a36] p-5 text-white shadow-[0_5px_20px_rgba(24,35,47,0.05)]"><div className="flex items-center justify-between"><h2 className="font-semibold">Today at a glance</h2><CalendarDays size={18} className="text-[#f3a44b]" /></div><div className="mt-6 space-y-5">{[["09:00", "Morning assembly", "Main ground"],["11:30", "Parent orientation", "Room 204"],["14:00", "Staff meeting", "Conference room"]].map(([time, title, place]) => <div key={title} className="flex gap-3"><div className="w-12 text-xs font-semibold text-[#f3a44b]">{time}</div><div><p className="text-sm font-medium">{title}</p><p className="mt-1 text-xs text-slate-400">{place}</p></div></div>)}</div><Link href="/dashboard/attendance" className="mt-7 flex items-center gap-1 text-xs font-semibold text-[#9ed1c2]">View attendance <ArrowUpRight size={14} /></Link></section></div>

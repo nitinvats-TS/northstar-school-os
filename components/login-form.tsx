@@ -3,7 +3,7 @@
 import { ArrowRight, Eye, EyeOff, KeyRound, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { demoUsers, roleLabels } from "@/lib/auth";
+import { demoUsers, getDefaultRoute, roleLabels } from "@/lib/auth";
 
 export function LoginForm() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export function LoginForm() {
         setError(data.message ?? "Unable to sign in.");
         return;
       }
-      router.push("/dashboard");
+      router.push(getDefaultRoute(data.user.role));
       router.refresh();
     } catch {
       setError("Unable to reach the authentication service. Please try again.");
