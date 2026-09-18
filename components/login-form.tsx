@@ -20,12 +20,14 @@ export function LoginForm() {
     try {
       const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ email, password }) });
       const data = await response.json().catch(() => ({ success: false, message: "The authentication service returned an invalid response." }));
+      console.log("LOGIN RESPONSE", data);
       if (!response.ok || data.success !== true) {
         setError(data.message ?? "Unable to sign in.");
         return;
       }
-      router.push(getDefaultRoute(data.user.role));
-      router.refresh();
+            router.refresh();
+            window.location.href = getDefaultRoute(data.user.role);
+            //router.push(getDefaultRoute(data.user.role));
     } catch {
       setError("Unable to reach the authentication service. Please try again.");
     } finally {
