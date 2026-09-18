@@ -17,13 +17,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    fetch("/api/auth/session")
-      .then((response) => response.json())
-      .then((data: { user: SessionUser | null }) => setUser(data.user))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
-  }, []);
+ useEffect(() => {
+  fetch("/api/auth/session")
+    .then((response) => response.json())
+    .then((data: { user: SessionUser | null }) => setUser(data.user))
+    .catch(() => setUser(null))
+    .finally(() => setLoading(false));
+}, []);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });

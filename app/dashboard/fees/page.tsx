@@ -1,5 +1,5 @@
-import { OperationsDashboard } from "@/components/operations-dashboard";
+import { redirect } from "next/navigation";
 
 export default function FeesPage() {
-  return <OperationsDashboard module="fees" />;
+  redirect("/dashboard/fees/structures");
 }
