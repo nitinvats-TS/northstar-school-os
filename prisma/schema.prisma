@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-provider = "postgresql"
+  provider = "postgresql"
 }
-
 
 enum Role {
   SUPER_ADMIN
@@ -23,6 +22,23 @@ enum AttendanceStatus {
   EXCUSED
 }
 
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  BANK_TRANSFER
+  UPI
+  OTHER
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -33,28 +49,29 @@ model User {
 }
 
 model Student {
-  id          String   @id @default(cuid())
-  admissionNo String   @unique
+  id          String             @id @default(cuid())
+  admissionNo String             @unique
   firstName   String
   lastName    String
   className   String
   section     String
   phone       String?
   email       String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime           @default(now())
   attendance  AttendanceRecord[] @relation("StudentAttendance")
+  invoices    Invoice[]
 }
 
 model Teacher {
-  id          String   @id @default(cuid())
-  employeeId  String   @unique
-  firstName   String
-  lastName    String
-  subject     String
-  phone       String?
-  email       String?
-  createdAt   DateTime @default(now())
-  attendance  AttendanceRecord[] @relation("TeacherAttendance")
+  id         String             @id @default(cuid())
+  employeeId String             @unique
+  firstName  String
+  lastName   String
+  subject    String
+  phone      String?
+  email      String?
+  createdAt  DateTime           @default(now())
+  attendance AttendanceRecord[] @relation("TeacherAttendance")
 }
 
 model Parent {
@@ -79,9 +96,69 @@ model AttendanceRecord {
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 
+  @@unique([date, studentId])
+  @@unique([date, teacherId])
   @@index([date])
   @@index([studentId, date])
   @@index([teacherId, date])
-  @@unique([date, studentId])
-  @@unique([date, teacherId])
+}
+
+model FeeStructure {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  amount      Decimal @db.Decimal(10, 2)
+
+  className String?
+  section   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices Invoice[]
+}
+
+model Invoice {
+  id            String @id @default(cuid())
+  invoiceNumber String @unique
+
+  studentId      String
+  feeStructureId String
+
+  amount     Decimal @db.Decimal(10, 2)
+  paidAmount Decimal @default(0) @db.Decimal(10, 2)
+
+  dueDate DateTime @db.Date
+
+  status InvoiceStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  feeStructure FeeStructure @relation(fields: [feeStructureId], references: [id])
+
+  payments Payment[]
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  invoiceId String
+
+  amount Decimal @db.Decimal(10, 2)
+
+  method PaymentMethod
+
+  referenceNumber String?
+
+  paymentDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  ...
 }
