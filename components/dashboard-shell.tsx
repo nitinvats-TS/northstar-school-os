@@ -29,7 +29,10 @@ const navigation = [
   { label: "Teachers", href: "/dashboard/teachers", icon: Users },
   { label: "Parents", href: "/dashboard/parents", icon: Users },
   { label: "Attendance", href: "/dashboard/attendance", icon: CalendarCheck2 },
-  { label: "Fees & billing", href: "/dashboard/fees", icon: WalletCards },
+  { label: "Fees Dashboard", href: "/dashboard/fees", icon: WalletCards },
+  { label: "Fee Structures", href: "/dashboard/fees/structures", icon: WalletCards },
+  { label: "Invoices", href: "/dashboard/fees/invoices", icon: WalletCards },
+  { label: "Payments", href: "/dashboard/fees/payments", icon: WalletCards },
   { label: "Exams", href: "/dashboard/exams", icon: BookOpen },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
   { label: "Timetable", href: "/dashboard/timetable", icon: CalendarDays },
@@ -59,7 +62,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <p className="mb-3 mt-10 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Workspace</p>
         <nav className="space-y-1">
           {visibleNavigation.map(({ label, href, icon: Icon }) => {
-            const active = href === "/dashboard" ? pathname === href : pathname.startsWith(href);
+              const active = pathname === href;
             return <Link key={href} href={href} onClick={() => setOpen(false)} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${active ? "bg-[#e7f2ed] text-[#1c5b4d]" : "text-slate-300 hover:bg-white/10 hover:text-white"}`}><Icon size={18} /><span>{label}</span></Link>;
           })}
         </nav>
